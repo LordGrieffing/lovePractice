@@ -1,11 +1,34 @@
+_G.love = require("love")
+
+love.graphics.setFont (love.graphics.newFont(25))
+Font = love.graphics.getFont()
+LifeScoreText = love.graphics.newText(Font)
+
 function love.load()
     Player = {}
     Player.x = 400
     Player.y = 200
     Player.speed = 3
+    Player.score = 0
+    Player.boost = 200
+
+    Astroid = {}
+    Astroid.x = 600
+    Astroid.y = math.random(10, 800)
+    Astroid.speed = 10
+
+    StarField = {}
 end
 
 function love.update(dt)
+    -- Generate background
+    for i = 0, 101, 1
+    do 
+        StarField[i] = math.random(10, 800)
+        StarField[i+1] = math.random(10, 800)
+    end
+
+    -- Player movement is handled here
     if love.keyboard.isDown("right") then
         Player.x = Player.x + Player.speed
     end
@@ -23,13 +46,57 @@ function love.update(dt)
     end
 
     if love.keyboard.isDown("lshift") then
-        Player.speed = 6
+        if Player.boost > 0 then
+            Player.speed = 6
+            Player.boost = Player.boost - 5
+            if Player.boost < 0 then
+                Player.boost = 0
+            end
+        else
+            Player.speed = 3
+        end
+
     else
         Player.speed = 3
+
+        if Player.boost <= 200 then
+            Player.boost = Player.boost + 1
+        end
     end
+
+
+    -- Astroid movement is handled here
+    Astroid.x = Astroid.x - Astroid.speed
+
+    if Astroid.x < 0 then
+        Astroid.x = 600
+        Astroid.y = math.random(10, 800)
+    end
+
+    -- Handle the background movement here
+    for i = 0,101,2
+    do
+        StarField[i] = StarField[i] - 2
+    end
+
+    -- Player score and analytics
+    Player.score = Player.score + 10
+    LifeScoreText:set({{1,1,1}, tostring(Player.score)}, 0, 0)
+
+
+    -- Handle Player collisions
+
+
 
 end
 
 function love.draw()
-    love.graphics.circle("fill", Player.x, Player.y, 15)
+    love.graphics.setColor(0,1,0)
+    love.graphics.draw(LifeScoreText, 10, 10)
+    love.graphics.polygon("fill", 150, 10, 150 + Player.boost, 10, 150 + Player.boost, 30, 150, 30)
+    love.graphics.setColor(1,1,1)
+    love.graphics.points(StarField)
+    love.graphics.polygon("fill", (Player.x-10), (Player.y-5),(Player.x+5), (Player.y+5),(Player.x-10), (Player.y+10))
+    love.graphics.setColor(0.5,0.5,0.6)
+    love.graphics.circle("fill", Astroid.x, Astroid.y, 30)
 end
