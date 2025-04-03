@@ -18,9 +18,15 @@ function love.load()
     Astroid.speed = 10
 
     StarField = {}
+
+    GameState = false
 end
 
 function love.update(dt)
+
+    if GameState == true then
+        return
+    end
     -- Generate background
     for i = 0, 101, 1
     do 
@@ -85,12 +91,23 @@ function love.update(dt)
 
 
     -- Handle Player collisions
+    GameState = CheckCircleCollision(Player.x, Player.y, 5, Astroid.x, Astroid.y, 30)
 
 
 
 end
 
 function love.draw()
+    if GameState == true then
+        love.graphics.setColor(0,1,0)
+        love.graphics.setFont (love.graphics.newFont(100))
+        Font = love.graphics.getFont()
+        GameOver = love.graphics.newText(Font)
+        GameOver:set({{0,1,0}, "GAME OVER"}, 0, 0)
+        love.graphics.draw(GameOver, 150, 200)
+
+    end
+
     love.graphics.setColor(0,1,0)
     love.graphics.draw(LifeScoreText, 10, 10)
     love.graphics.polygon("fill", 150, 10, 150 + Player.boost, 10, 150 + Player.boost, 30, 150, 30)
@@ -99,4 +116,11 @@ function love.draw()
     love.graphics.polygon("fill", (Player.x-10), (Player.y-5),(Player.x+5), (Player.y+5),(Player.x-10), (Player.y+10))
     love.graphics.setColor(0.5,0.5,0.6)
     love.graphics.circle("fill", Astroid.x, Astroid.y, 30)
+end
+
+function CheckCircleCollision(x1, y1, r1, x2, y2, r2)
+    local dx = x1 - x2
+    local dy = y1 - y2
+    local distance = math.sqrt(dx * dx + dy * dy)
+    return distance < (r1 + r2)
 end
