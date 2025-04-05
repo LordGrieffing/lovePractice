@@ -74,10 +74,13 @@ function love.update(dt)
     -- Astroid movement is handled here
     Astroid.x = Astroid.x - Astroid.speed
 
+    if (Player.score - math.floor(Player.score/10000) * 10000) == 0 then
+        Astroid.speed = Astroid.speed + 0.5
+    end
+
     if Astroid.x < 0 then
         Astroid.x = 600
         Astroid.y = math.random(10, 800)
-        Astroid.speed = Astroid.speed + 0.5
     end
 
     -- Handle the background movement here
