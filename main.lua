@@ -77,6 +77,7 @@ function love.update(dt)
     if Astroid.x < 0 then
         Astroid.x = 600
         Astroid.y = math.random(10, 800)
+        Astroid.speed = Astroid.speed + 0.5
     end
 
     -- Handle the background movement here
@@ -104,7 +105,7 @@ function love.draw()
         Font = love.graphics.getFont()
         GameOver = love.graphics.newText(Font)
         GameOver:set({{0,1,0}, "GAME OVER"}, 0, 0)
-        love.graphics.draw(GameOver, 150, 200)
+        love.graphics.draw(GameOver, 120, 200)
 
     end
 
