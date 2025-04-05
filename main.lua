@@ -13,7 +13,7 @@ function love.load()
     Player.boost = 200
 
     Astroid = {}
-    Astroid.x = 600
+    Astroid.x = 800
     Astroid.y = math.random(10, 800)
     Astroid.speed = 10
 
@@ -24,9 +24,11 @@ end
 
 function love.update(dt)
 
+    -- End game 
     if GameState == true then
         return
     end
+
     -- Generate background
     for i = 0, 101, 1
     do 
@@ -36,19 +38,27 @@ function love.update(dt)
 
     -- Player movement is handled here
     if love.keyboard.isDown("right") then
-        Player.x = Player.x + Player.speed
+        if (Player.x + Player.speed) < 800 then
+            Player.x = Player.x + Player.speed
+        end
     end
 
     if love.keyboard.isDown("left") then
-        Player.x = Player.x - Player.speed
+        if (Player.x - Player.speed) > 0 then
+            Player.x = Player.x - Player.speed
+        end
     end
 
     if love.keyboard.isDown("up") then
-        Player.y = Player.y - Player.speed
+        if (Player.y - Player.speed) > 0 then
+            Player.y = Player.y - Player.speed
+        end
     end
 
     if love.keyboard.isDown("down") then
-        Player.y = Player.y + Player.speed
+        if (Player.y - Player.speed) < 590 then
+            Player.y = Player.y + Player.speed
+        end
     end
 
     if love.keyboard.isDown("lshift") then
@@ -75,11 +85,11 @@ function love.update(dt)
     Astroid.x = Astroid.x - Astroid.speed
 
     if (Player.score - math.floor(Player.score/10000) * 10000) == 0 then
-        Astroid.speed = Astroid.speed + 0.5
+        Astroid.speed = Astroid.speed + 1
     end
 
     if Astroid.x < 0 then
-        Astroid.x = 600
+        Astroid.x = 800
         Astroid.y = math.random(10, 800)
     end
 
